@@ -13,8 +13,10 @@ func Slices[K constraints.Ordered, V any](key func(V) K, combiner func(*V, *V), 
 			k := key(slices[i][j])
 			v, exists := tm.Get(k)
 			if exists {
-				combiner(&v, &slices[i][j])
-				tm.Set(k, v)
+				if combiner != nil {
+					combiner(&v, &slices[i][j])
+					tm.Set(k, v)
+				}
 			} else {
 				tm.Set(k, slices[i][j])
 			}

@@ -2,6 +2,7 @@ package merge
 
 import (
 	"fmt"
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -83,4 +84,20 @@ func TestSlices_Large(t *testing.T) {
 			require.Equal(t, 134680, out[i].Goals)
 		}
 	}
+}
+
+func TestMergeStrings(t *testing.T) {
+	a := []string{"b", "C", "A"}
+	b := []string{"d", "D", "a"}
+
+	got := Slices(
+		func(s string) string {
+			return strings.ToLower(s)
+		},
+		nil, // do nothing, just unique
+		a, b,
+	)
+
+	expected := []string{"A", "b", "C", "d"}
+	require.ElementsMatch(t, expected, got)
 }
