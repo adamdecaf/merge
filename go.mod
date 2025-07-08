@@ -2,7 +2,7 @@ module github.com/adamdecaf/merge
 
 go 1.23.0
 
-toolchain go1.24.4
+toolchain go1.24.5
 
 require (
 	github.com/igrmk/treemap/v2 v2.0.1
