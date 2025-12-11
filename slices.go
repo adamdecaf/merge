@@ -25,27 +25,31 @@ import (
 // Returns:
 //
 //	A sorted slice containing the merged values, ordered by their keys.
-func Slices[K constraints.Ordered, V any](key func(V) K, combiner func(*V, *V), slices ...[]V) []V {
-	tm := treemap.New[K, V]()
+func Slices[K constraints.Ordered, V any](key func(V) K, combiner func(*V, V), slices ...[]V) []V {
+	tm := treemap.New[K, *V]()
 
-	for i := range slices {
-		for j := range slices[i] {
-			k := key(slices[i][j])
-			v, exists := tm.Get(k)
-			if exists {
+	for _, sl := range slices {
+		for i := range sl {
+			v := sl[i]
+			k := key(v)
+
+			if ptr, found := tm.Get(k); found {
 				if combiner != nil {
-					combiner(&v, &slices[i][j])
-					tm.Set(k, v)
+					combiner(ptr, v)
 				}
 			} else {
-				tm.Set(k, slices[i][j])
+				ptr := new(V)
+				*ptr = v
+				tm.Set(k, ptr)
 			}
 		}
 	}
 
-	var out []V
+	out := make([]V, 0, tm.Len())
+
 	for it := tm.Iterator(); it.Valid(); it.Next() {
-		out = append(out, it.Value())
+		out = append(out, *it.Value())
 	}
+
 	return out
 }

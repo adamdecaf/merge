@@ -40,7 +40,7 @@ func TestSlices_Basic(t *testing.T) {
 		func(p Player) string {
 			return p.Name
 		},
-		func(p1 *Player, p2 *Player) {
+		func(p1 *Player, p2 Player) {
 			p1.Goals += p2.Goals
 		},
 		game1, game2, game3, game4,
@@ -68,7 +68,7 @@ func TestSlices_Large(t *testing.T) {
 		func(p Player) string {
 			return p.Name
 		},
-		func(p1 *Player, p2 *Player) {
+		func(p1 *Player, p2 Player) {
 			p1.Goals += p2.Goals
 		},
 		games...,
@@ -100,4 +100,35 @@ func TestMergeStrings(t *testing.T) {
 
 	expected := []string{"A", "b", "C", "d"}
 	require.ElementsMatch(t, expected, got)
+}
+
+func BenchmarkSlices(b *testing.B) {
+	// Prepare data outside the timed loop (adapted from TestSlices_Large)
+	iterations := 10000
+	mod := 27
+
+	var games [][]Player
+	for i := 0; i < iterations; i++ {
+		var players []Player
+		for j := 1; j < iterations; j *= 3 {
+			players = append(players, Player{
+				Name:  fmt.Sprintf("Forward %02.2d", i%mod),
+				Goals: j / mod,
+			})
+		}
+		games = append(games, players)
+	}
+
+	keyFn := func(p Player) string {
+		return p.Name
+	}
+	combiner := func(existing *Player, incoming Player) {
+		existing.Goals += incoming.Goals
+	}
+
+	// Reset timer and run the benchmark
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		_ = Slices(keyFn, combiner, games...)
+	}
 }
