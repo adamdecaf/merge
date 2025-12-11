@@ -46,10 +46,12 @@ func Slices[K constraints.Ordered, V any](key func(V) K, combiner func(*V, V), s
 	}
 
 	out := make([]V, 0, tm.Len())
-
 	for it := tm.Iterator(); it.Valid(); it.Next() {
 		out = append(out, *it.Value())
 	}
 
+	if len(out) == 0 {
+		return nil
+	}
 	return out
 }
