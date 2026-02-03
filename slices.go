@@ -28,6 +28,10 @@ import (
 func Slices[K constraints.Ordered, V any](key func(V) K, combiner func(*V, V), slices ...[]V) []V {
 	tm := treemap.New[K, *V]()
 
+	if key == nil {
+		return nil
+	}
+
 	for _, sl := range slices {
 		for i := range sl {
 			v := sl[i]
@@ -48,10 +52,6 @@ func Slices[K constraints.Ordered, V any](key func(V) K, combiner func(*V, V), s
 	out := make([]V, 0, tm.Len())
 	for it := tm.Iterator(); it.Valid(); it.Next() {
 		out = append(out, *it.Value())
-	}
-
-	if len(out) == 0 {
-		return nil
 	}
 	return out
 }

@@ -102,6 +102,16 @@ func TestMergeStrings(t *testing.T) {
 	require.ElementsMatch(t, expected, got)
 }
 
+func TestEmpty(t *testing.T) {
+	a := []string{"b", "C", "A"}
+	b := []string{"d", "D", "a"}
+
+	var fn func(string) string
+
+	got := Slices(fn, nil, a, b)
+	require.Empty(t, got)
+}
+
 func BenchmarkSlices(b *testing.B) {
 	// Prepare data outside the timed loop (adapted from TestSlices_Large)
 	iterations := 10000
