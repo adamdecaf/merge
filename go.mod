@@ -7,7 +7,7 @@ toolchain go1.26.5
 require (
 	github.com/igrmk/treemap/v2 v2.0.1
 	github.com/stretchr/testify v1.11.1
-	golang.org/x/exp v0.0.0-20260812173653-3d80eb74bc5b
+	golang.org/x/exp v0.0.0-20260813180055-c1d0aacb2297
 )
 
 require (
