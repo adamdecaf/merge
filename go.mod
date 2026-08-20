@@ -1,13 +1,13 @@
 module github.com/adamdecaf/merge
 
-go 1.25.0
+go 1.26.0
 
 toolchain go1.26.5
 
 require (
 	github.com/igrmk/treemap/v2 v2.0.1
 	github.com/stretchr/testify v1.11.1
-	golang.org/x/exp v0.0.0-20260813180055-c1d0aacb2297
+	golang.org/x/exp v0.0.0-20260820142414-ca536658362e
 )
 
 require (
